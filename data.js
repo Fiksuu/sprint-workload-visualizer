@@ -1,0 +1,549 @@
+const DEFAULT_REPORT_DATA = [
+  {
+    "data": "2025-11-03",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Bartek",
+    "godziny": 7.5
+  },
+  {
+    "data": "2025-11-03",
+    "zadanie": "Mentoring",
+    "pracownik": "Bartek",
+    "godziny": 0.5
+  },
+  {
+    "data": "2025-11-03",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Kamil",
+    "godziny": 6
+  },
+  {
+    "data": "2025-11-03",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Darek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-03",
+    "zadanie": "Klient X – design",
+    "pracownik": "Alicja",
+    "godziny": 5.6
+  },
+  {
+    "data": "2025-11-04",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Bartek",
+    "godziny": 7
+  },
+  {
+    "data": "2025-11-04",
+    "zadanie": "Rekrutacja",
+    "pracownik": "Bartek",
+    "godziny": 1
+  },
+  {
+    "data": "2025-11-04",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Kamil",
+    "godziny": 6
+  },
+  {
+    "data": "2025-11-04",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Darek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-04",
+    "zadanie": "Klient X – design",
+    "pracownik": "Alicja",
+    "godziny": 5.6
+  },
+  {
+    "data": "2025-11-05",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Bartek",
+    "godziny": 7.5
+  },
+  {
+    "data": "2025-11-05",
+    "zadanie": "Marketing",
+    "pracownik": "Bartek",
+    "godziny": 0.5
+  },
+  {
+    "data": "2025-11-05",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Kamil",
+    "godziny": 6
+  },
+  {
+    "data": "2025-11-05",
+    "zadanie": "Chorobowe",
+    "pracownik": "Darek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-05",
+    "zadanie": "Klient X – design",
+    "pracownik": "Alicja",
+    "godziny": 5.6
+  },
+  {
+    "data": "2025-11-06",
+    "zadanie": "Klient X – meetings",
+    "pracownik": "Bartek",
+    "godziny": 4.5
+  },
+  {
+    "data": "2025-11-06",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Bartek",
+    "godziny": 3.5
+  },
+  {
+    "data": "2025-11-06",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Kamil",
+    "godziny": 6
+  },
+  {
+    "data": "2025-11-06",
+    "zadanie": "Chorobowe",
+    "pracownik": "Darek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-06",
+    "zadanie": "Klient X – design",
+    "pracownik": "Alicja",
+    "godziny": 5.6
+  },
+  {
+    "data": "2025-11-07",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Bartek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-07",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Kamil",
+    "godziny": 6
+  },
+  {
+    "data": "2025-11-07",
+    "zadanie": "Chorobowe",
+    "pracownik": "Darek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-07",
+    "zadanie": "Klient X – design",
+    "pracownik": "Alicja",
+    "godziny": 5.6
+  },
+  {
+    "data": "2025-11-10",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Bartek",
+    "godziny": 7.5
+  },
+  {
+    "data": "2025-11-10",
+    "zadanie": "Rekrutacja",
+    "pracownik": "Bartek",
+    "godziny": 0.5
+  },
+  {
+    "data": "2025-11-10",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Kamil",
+    "godziny": 6
+  },
+  {
+    "data": "2025-11-10",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Darek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-10",
+    "zadanie": "Klient X – design",
+    "pracownik": "Alicja",
+    "godziny": 5.6
+  },
+  {
+    "data": "2025-11-12",
+    "zadanie": "Klient X – meetings",
+    "pracownik": "Bartek",
+    "godziny": 4
+  },
+  {
+    "data": "2025-11-12",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Bartek",
+    "godziny": 4
+  },
+  {
+    "data": "2025-11-12",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Kamil",
+    "godziny": 6
+  },
+  {
+    "data": "2025-11-12",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Darek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-12",
+    "zadanie": "Klient X – design",
+    "pracownik": "Alicja",
+    "godziny": 5.6
+  },
+  {
+    "data": "2025-11-13",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Bartek",
+    "godziny": 7.5
+  },
+  {
+    "data": "2025-11-13",
+    "zadanie": "Mentoring",
+    "pracownik": "Bartek",
+    "godziny": 0.5
+  },
+  {
+    "data": "2025-11-13",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Kamil",
+    "godziny": 6
+  },
+  {
+    "data": "2025-11-13",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Darek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-13",
+    "zadanie": "Klient X – design",
+    "pracownik": "Alicja",
+    "godziny": 5.6
+  },
+  {
+    "data": "2025-11-14",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Bartek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-14",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Kamil",
+    "godziny": 6
+  },
+  {
+    "data": "2025-11-14",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Darek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-14",
+    "zadanie": "Klient X – design",
+    "pracownik": "Alicja",
+    "godziny": 5.6
+  },
+  {
+    "data": "2025-11-17",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Bartek",
+    "godziny": 7.5
+  },
+  {
+    "data": "2025-11-17",
+    "zadanie": "Marketing",
+    "pracownik": "Bartek",
+    "godziny": 0.5
+  },
+  {
+    "data": "2025-11-17",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Kamil",
+    "godziny": 6
+  },
+  {
+    "data": "2025-11-17",
+    "zadanie": "Urlop",
+    "pracownik": "Darek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-17",
+    "zadanie": "Klient X – design",
+    "pracownik": "Alicja",
+    "godziny": 5.6
+  },
+  {
+    "data": "2025-11-18",
+    "zadanie": "Klient X – meetings",
+    "pracownik": "Bartek",
+    "godziny": 4.5
+  },
+  {
+    "data": "2025-11-18",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Bartek",
+    "godziny": 3.5
+  },
+  {
+    "data": "2025-11-18",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Kamil",
+    "godziny": 6
+  },
+  {
+    "data": "2025-11-18",
+    "zadanie": "Urlop",
+    "pracownik": "Darek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-18",
+    "zadanie": "Klient X – design",
+    "pracownik": "Alicja",
+    "godziny": 5.6
+  },
+  {
+    "data": "2025-11-19",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Bartek",
+    "godziny": 7.5
+  },
+  {
+    "data": "2025-11-19",
+    "zadanie": "Mentoring",
+    "pracownik": "Bartek",
+    "godziny": 0.5
+  },
+  {
+    "data": "2025-11-19",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Kamil",
+    "godziny": 6
+  },
+  {
+    "data": "2025-11-19",
+    "zadanie": "Urlop",
+    "pracownik": "Darek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-19",
+    "zadanie": "Klient X – design",
+    "pracownik": "Alicja",
+    "godziny": 5.6
+  },
+  {
+    "data": "2025-11-20",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Bartek",
+    "godziny": 7
+  },
+  {
+    "data": "2025-11-20",
+    "zadanie": "Rekrutacja",
+    "pracownik": "Bartek",
+    "godziny": 1
+  },
+  {
+    "data": "2025-11-20",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Kamil",
+    "godziny": 6
+  },
+  {
+    "data": "2025-11-20",
+    "zadanie": "Urlop",
+    "pracownik": "Darek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-20",
+    "zadanie": "Klient X – design",
+    "pracownik": "Alicja",
+    "godziny": 5.6
+  },
+  {
+    "data": "2025-11-21",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Bartek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-21",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Kamil",
+    "godziny": 6
+  },
+  {
+    "data": "2025-11-21",
+    "zadanie": "Urlop",
+    "pracownik": "Darek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-21",
+    "zadanie": "Klient X – design",
+    "pracownik": "Alicja",
+    "godziny": 5.6
+  },
+  {
+    "data": "2025-11-24",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Bartek",
+    "godziny": 7.5
+  },
+  {
+    "data": "2025-11-24",
+    "zadanie": "Marketing",
+    "pracownik": "Bartek",
+    "godziny": 0.5
+  },
+  {
+    "data": "2025-11-24",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Kamil",
+    "godziny": 6
+  },
+  {
+    "data": "2025-11-24",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Darek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-24",
+    "zadanie": "Klient X – design",
+    "pracownik": "Alicja",
+    "godziny": 5.6
+  },
+  {
+    "data": "2025-11-25",
+    "zadanie": "Klient X – meetings",
+    "pracownik": "Bartek",
+    "godziny": 4
+  },
+  {
+    "data": "2025-11-25",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Bartek",
+    "godziny": 4
+  },
+  {
+    "data": "2025-11-25",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Kamil",
+    "godziny": 6
+  },
+  {
+    "data": "2025-11-25",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Darek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-25",
+    "zadanie": "Klient X – design",
+    "pracownik": "Alicja",
+    "godziny": 5.6
+  },
+  {
+    "data": "2025-11-26",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Bartek",
+    "godziny": 7.5
+  },
+  {
+    "data": "2025-11-26",
+    "zadanie": "Rekrutacja",
+    "pracownik": "Bartek",
+    "godziny": 0.5
+  },
+  {
+    "data": "2025-11-26",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Kamil",
+    "godziny": 6
+  },
+  {
+    "data": "2025-11-26",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Darek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-26",
+    "zadanie": "Klient X – design",
+    "pracownik": "Alicja",
+    "godziny": 5.6
+  },
+  {
+    "data": "2025-11-27",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Bartek",
+    "godziny": 7
+  },
+  {
+    "data": "2025-11-27",
+    "zadanie": "Marketing",
+    "pracownik": "Bartek",
+    "godziny": 1
+  },
+  {
+    "data": "2025-11-27",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Kamil",
+    "godziny": 6
+  },
+  {
+    "data": "2025-11-27",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Darek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-27",
+    "zadanie": "Klient X – design",
+    "pracownik": "Alicja",
+    "godziny": 5.6
+  },
+  {
+    "data": "2025-11-28",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Bartek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-28",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Kamil",
+    "godziny": 6
+  },
+  {
+    "data": "2025-11-28",
+    "zadanie": "Klient X – programming",
+    "pracownik": "Darek",
+    "godziny": 8
+  },
+  {
+    "data": "2025-11-28",
+    "zadanie": "Klient X – design",
+    "pracownik": "Alicja",
+    "godziny": 5.6
+  }
+];
+if (typeof module !== 'undefined') module.exports = DEFAULT_REPORT_DATA;

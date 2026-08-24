@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="pl" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TimeMetrics Pro — Interaktywny Dashboard Czasu Pracy</title>
+  <meta name="description" content="Nowoczesny dashboard analityczny do analizy i wizualizacji czasu pracy, zadań oraz dostępności zespołu.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand-section">
+        <div class="brand-icon">
+          <i class="fa-solid fa-chart-pie"></i>
+        </div>
+        <div>
+          <h1 class="brand-title">
+            <span>TimeMetrics</span> Pro
+            <span class="badge-version">v2.0</span>
+          </h1>
+          <p class="brand-subtitle">
+            <i class="fa-regular fa-calendar"></i> Raport czasu pracy zespołu — Listopad 2025
+          </p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="theme-toggle-btn" class="btn btn-secondary btn-icon-only" title="Przełącz motyw (Ciemny / Jasny)">
+          <i class="fa-solid fa-sun" id="theme-icon"></i>
+        </button>
+        <button id="upload-json-btn" class="btn btn-secondary" title="Wczytaj własny plik JSON">
+          <i class="fa-solid fa-file-import"></i> Wgraj JSON
+        </button>
+        <button id="export-csv-btn" class="btn btn-secondary" title="Eksportuj przefiltrowane dane do CSV">
+          <i class="fa-solid fa-file-csv"></i> Eksport CSV
+        </button>
+        <button id="reset-filters-btn" class="btn btn-primary" title="Zresetuj wszystkie filtry">
+          <i class="fa-solid fa-rotate-left"></i> Reset filtrów
+        </button>
+      </div>
+    </header>
+
+    <!-- Filters Section -->
+    <section class="filter-panel" aria-label="Filtry danych">
+      <div class="filter-grid">
+        
+        <!-- Workers Multi-Select -->
+        <div class="filter-col">
+          <div class="filter-section-title">
+            <span><i class="fa-solid fa-users"></i> Pracownicy</span>
+            <div class="filter-actions-link">
+              <span id="select-all-workers-btn">Wszyscy</span> • 
+              <span id="deselect-all-workers-btn">Odznacz</span>
+            </div>
+          </div>
+          <div class="workers-wrapper" id="workers-filter-container">
+            <!-- Dynamically populated worker chips -->
+          </div>
+        </div>
+
+        <!-- Task & Category Multi-Select -->
+        <div class="filter-col">
+          <div class="filter-section-title">
+            <span><i class="fa-solid fa-list-check"></i> Zadania / Kategorie</span>
+            <div class="filter-actions-link">
+              <span id="select-all-tasks-btn">Wszystkie</span> • 
+              <span id="deselect-all-tasks-btn">Odznacz</span>
+            </div>
+          </div>
+          <div class="tasks-wrapper" id="tasks-filter-container">
+            <!-- Dynamically populated task chips -->
+          </div>
+        </div>
+
+        <!-- Search & Date Filter -->
+        <div class="filter-col search-date-col">
+          <div>
+            <div class="filter-section-title">
+              <span><i class="fa-solid fa-magnifying-glass"></i> Szukaj w zadaniach</span>
+            </div>
+            <div class="search-box">
+              <i class="fa-solid fa-search search-icon"></i>
+              <input type="text" id="task-search-input" class="search-input" placeholder="np. programming, design, urlop...">
+              <button id="clear-search-btn" class="clear-search-btn" title="Wyczyść szukanie">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <div class="filter-section-title">
+              <span><i class="fa-regular fa-clock"></i> Szybki zakres dat</span>
+            </div>
+            <div class="date-presets" id="date-presets-container">
+              <button class="date-preset-btn active" data-preset="all">Cały okres</button>
+              <button class="date-preset-btn" data-preset="w1">Tydz. 1 (03-07.11)</button>
+              <button class="date-preset-btn" data-preset="w2">Tydz. 2 (10-14.11)</button>
+              <button class="date-preset-btn" data-preset="w3">Tydz. 3 (17-21.11)</button>
+              <button class="date-preset-btn" data-preset="w4">Tydz. 4 (24-28.11)</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- KPI Summary Grid -->
+    <section class="kpi-grid" aria-label="Wskaźniki KPI">
+      
+      <!-- Total Hours KPI -->
+      <div class="kpi-card" style="--kpi-accent: var(--accent-primary); --kpi-bg: var(--accent-primary-light);">
+        <div class="kpi-header">
+          <span class="kpi-title">Suma Godzin</span>
+          <div class="kpi-icon"><i class="fa-solid fa-stopwatch"></i></div>
+        </div>
+        <div class="kpi-value" id="kpi-total-hours">
+          0.0 <span class="unit">h</span>
+        </div>
+        <div class="kpi-footer">
+          <span id="kpi-total-percent" class="kpi-pill neutral">100% całości</span>
+          <span id="kpi-active-entries">0 wpisów</span>
+        </div>
+      </div>
+
+      <!-- Billable (Client X) KPI -->
+      <div class="kpi-card" style="--kpi-accent: var(--accent-cyan); --kpi-bg: var(--accent-cyan-light);">
+        <div class="kpi-header">
+          <span class="kpi-title">Klient X (Komercyjne)</span>
+          <div class="kpi-icon"><i class="fa-solid fa-briefcase"></i></div>
+        </div>
+        <div class="kpi-value" id="kpi-client-hours">
+          0.0 <span class="unit">h</span>
+        </div>
+        <div class="kpi-footer">
+          <span id="kpi-client-percent" class="kpi-pill positive">0% billable</span>
+          <span>Prace projektowe</span>
+        </div>
+      </div>
+
+      <!-- Absences KPI -->
+      <div class="kpi-card" style="--kpi-accent: var(--accent-rose); --kpi-bg: var(--accent-rose-light);">
+        <div class="kpi-header">
+          <span class="kpi-title">Nieobecności (Urlop / L4)</span>
+          <div class="kpi-icon"><i class="fa-solid fa-umbrella-beach"></i></div>
+        </div>
+        <div class="kpi-value" id="kpi-absence-hours">
+          0.0 <span class="unit">h</span>
+        </div>
+        <div class="kpi-footer">
+          <span id="kpi-absence-percent" class="kpi-pill warning">0% czasu</span>
+          <span id="kpi-absence-details">0h Urlop | 0h L4</span>
+        </div>
+      </div>
+
+      <!-- Internal Tasks KPI -->
+      <div class="kpi-card" style="--kpi-accent: var(--accent-amber); --kpi-bg: var(--accent-amber-light);">
+        <div class="kpi-header">
+          <span class="kpi-title">Zadania Wewnętrzne</span>
+          <div class="kpi-icon"><i class="fa-solid fa-building"></i></div>
+        </div>
+        <div class="kpi-value" id="kpi-internal-hours">
+          0.0 <span class="unit">h</span>
+        </div>
+        <div class="kpi-footer">
+          <span id="kpi-internal-percent" class="kpi-pill neutral">0% czasu</span>
+          <span>Marketing / Mentoring / HR</span>
+        </div>
+      </div>
+
+      <!-- Team Avg / Day KPI -->
+      <div class="kpi-card" style="--kpi-accent: var(--accent-emerald); --kpi-bg: var(--accent-emerald-light);">
+        <div class="kpi-header">
+          <span class="kpi-title">Średnia Dzienna</span>
+          <div class="kpi-icon"><i class="fa-solid fa-chart-line"></i></div>
+        </div>
+        <div class="kpi-value" id="kpi-daily-avg">
+          0.0 <span class="unit">h/dzień</span>
+        </div>
+        <div class="kpi-footer">
+          <span id="kpi-active-days" class="kpi-pill positive">0 dni roboczych</span>
+          <span id="kpi-active-workers-count">4 osoby</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Charts Section -->
+    <section class="charts-grid" aria-label="Wykresy wizualne">
+      
+      <!-- Chart 1: Tasks Donut Breakdown -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h2 class="chart-title">
+            <i class="fa-solid fa-chart-pie" style="color: var(--accent-cyan);"></i>
+            Struktura Zadań i Kategorii
+          </h2>
+          <div class="chart-actions">
+            <span class="badge-version" id="donut-total-badge">0h</span>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="tasksDonutChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Chart 2: Workers Stacked Bar -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h2 class="chart-title">
+            <i class="fa-solid fa-chart-column" style="color: var(--accent-primary);"></i>
+            Godziny per Pracownik
+          </h2>
+          <div class="chart-actions">
+            <span class="badge-version">Podział na zadania</span>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="workersBarChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Chart 3: Timeline Trend (Full Width) -->
+      <div class="chart-card chart-container-full">
+        <div class="chart-header">
+          <div class="chart-header-left">
+            <h2 class="chart-title">
+              <i class="fa-solid fa-timeline" style="color: var(--accent-emerald);"></i>
+              Trend Dzienny — Rozkład godzin w czasie
+            </h2>
+            <div id="timeline-active-filter-badge" class="badge-filter-active" style="display: none;">
+              <i class="fa-solid fa-calendar-day"></i>
+              <span>Dzień: <strong id="timeline-filter-date-val"></strong></span>
+              <button id="clear-timeline-date-btn" class="badge-clear-btn" title="Usuń filtr wybranego dnia">&times;</button>
+            </div>
+          </div>
+          <div class="chart-actions">
+            <!-- Mode switcher: Zadania / Kategorie / Pracownicy -->
+            <div class="segmented-control" id="timeline-mode-selector" aria-label="Wybór podziału">
+              <button class="seg-btn active" data-mode="tasks" title="Szczegółowy podział na zadania (co było robione)">
+                <i class="fa-solid fa-list-check"></i> Zadania
+              </button>
+              <button class="seg-btn" data-mode="categories" title="Podział na kategorie ogólne">
+                <i class="fa-solid fa-layer-group"></i> Kategorie
+              </button>
+              <button class="seg-btn" data-mode="workers" title="Podział na pracowników zespołu">
+                <i class="fa-solid fa-users"></i> Pracownicy
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="chart-container" style="height: 290px;">
+          <canvas id="timelineTrendChart"></canvas>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Interactive Navigation Tabs -->
+    <nav class="tabs-nav" role="tablist">
+      <button class="tab-btn active" data-tab="team-tab" role="tab" id="tab-team-btn">
+        <i class="fa-solid fa-id-card"></i> Widok Zespołu (Karty)
+      </button>
+      <button class="tab-btn" data-tab="matrix-tab" role="tab" id="tab-matrix-btn">
+        <i class="fa-solid fa-table-cells"></i> Macierz Aktywności (Heatmap)
+      </button>
+      <button class="tab-btn" data-tab="table-tab" role="tab" id="tab-table-btn">
+        <i class="fa-solid fa-table-list"></i> Szczegółowa Tabela Wpisów
+      </button>
+    </nav>
+
+    <!-- Tab 1: Team Cards View -->
+    <div class="tab-pane active" id="team-tab" role="tabpanel">
+      <div class="team-grid" id="team-cards-container">
+        <!-- Dynamically rendered team cards -->
+      </div>
+    </div>
+
+    <!-- Tab 2: Activity Matrix View -->
+    <div class="tab-pane" id="matrix-tab" role="tabpanel">
+      <div class="matrix-container">
+        <table class="matrix-table" id="activity-matrix-table">
+          <!-- Dynamically rendered matrix -->
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab 3: Detailed Table View -->
+    <div class="tab-pane" id="table-tab" role="tabpanel">
+      <div class="table-card">
+        
+        <div class="table-controls">
+          <div class="table-summary-text" id="table-summary-text">
+            Wyświetlanie <strong>0</strong> z <strong>0</strong> wpisów
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <label for="table-page-size" style="font-size: 12px; color: var(--text-secondary);">Wierszy na stronę:</label>
+            <select id="table-page-size" style="background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 4px 8px; font-size: 12px;">
+              <option value="10">10</option>
+              <option value="20" selected>20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="data-table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th data-sort="data" id="th-date">Data <i class="fa-solid fa-sort"></i></th>
+                <th data-sort="pracownik" id="th-worker">Pracownik <i class="fa-solid fa-sort"></i></th>
+                <th data-sort="zadanie" id="th-task">Zadanie <i class="fa-solid fa-sort"></i></th>
+                <th data-sort="kategoria" id="th-category">Kategoria <i class="fa-solid fa-sort"></i></th>
+                <th data-sort="godziny" id="th-hours" style="text-align: right;">Godziny <i class="fa-solid fa-sort"></i></th>
+              </tr>
+            </thead>
+            <tbody id="table-body">
+              <!-- Dynamically rendered rows -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <span id="pagination-info">Strona 1 z 1</span>
+          <div class="pagination-controls">
+            <button id="prev-page-btn" class="page-btn"><i class="fa-solid fa-chevron-left"></i> Poprzednia</button>
+            <button id="next-page-btn" class="page-btn">Następna <i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- JSON Upload Modal -->
+  <div class="modal-backdrop" id="upload-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-upload" style="color: var(--accent-primary);"></i> Wczytaj plik z danymi JSON</h3>
+        <button class="close-modal-btn" id="close-modal-btn">&times;</button>
+      </div>
+      <div class="dropzone" id="json-dropzone">
+        <div class="dropzone-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+        <p style="font-weight: 600; margin-bottom: 4px;">Przeciągnij i upuść plik JSON tutaj</p>
+        <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 14px;">lub kliknij przycisk poniżej, aby wybrać plik z dysku</p>
+        <input type="file" id="json-file-input" accept=".json" style="display: none;">
+        <button class="btn btn-secondary" onclick="document.getElementById('json-file-input').click()">
+          Wybierz plik JSON
+        </button>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <button id="restore-default-data-btn" class="btn btn-secondary" style="font-size: 11px;">
+          <i class="fa-solid fa-rotate-left"></i> Przywróć raport_godzinowy.json
+        </button>
+        <button id="cancel-modal-btn" class="btn btn-secondary">Zamknij</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script dependencies -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
